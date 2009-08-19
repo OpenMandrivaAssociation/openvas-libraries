@@ -4,13 +4,14 @@
 %define develname %mklibname -d openvas
 
 Name:           openvas-libraries
-Version:        2.0.2
+Version:        2.0.4
 Release:        %mkrel 1
 License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
 Source:         http://wald.intevation.org/frs/download.php/572/%{name}-%{version}.tar.gz
-Patch:		openvas-libraries-Makefile-2.0.0.patch
+Patch0:		openvas-libraries-2.0.3-strfmt.patch
+Patch1:		openvas-libraries-2.0.3-libs.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  libpcap-devel glib2-devel gnutls-devel
 Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Server
@@ -45,11 +46,13 @@ This package contains the development files (mainly C header files) for openvas-
 
 %prep
 %setup -qn openvas-libraries-%{version}
-%patch -p1
+%patch0 -p1 -b .strfmt
+%patch1 -p1 -b .libs
 
 %build
+autoconf
 %configure2_5x --disable-static
-%make
+%make all
 
 %install
 rm -fr %buildroot

@@ -1,17 +1,16 @@
-%define major 2
+%define major 3
 %define libname %mklibname openvas %{major}
-%define libhg %mklibname openvas_hg %{major}
 %define develname %mklibname -d openvas
 
 Name:           openvas-libraries
-Version:        2.0.4
-Release:        %mkrel 1
+Version:        3.0.0
+Release:        %mkrel 2
 License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
 Source:         http://wald.intevation.org/frs/download.php/572/%{name}-%{version}.tar.gz
-Patch0:		openvas-libraries-2.0.3-strfmt.patch
-Patch1:		openvas-libraries-2.0.3-libs.patch
+Patch1:		openvas-libraries-3.0.0-libs.patch
+Patch2:		openvas-libraries-3.0.0-linkage.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  libpcap-devel glib2-devel gnutls-devel
 Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Server
@@ -26,17 +25,9 @@ Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Se
 %description -n %{libname}
 The support libraries for Open Vulnerability Assessment (OpenVAS) Server.
 
-%package -n %{libhg}
-Group:          System/Libraries
-Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Server
-
-%description -n %{libhg}
-The support libraries for Open Vulnerability Assessment (OpenVAS) Server.
-
 %package -n %{develname}
 Group:		Development/C
 Requires:	%{libname} = %{version}
-Requires:	%{libhg} = %{version}
 Provides:	%{name}-devel = %{version}-%{release}
 Provides:	openvas-devel = %{version}-%{release}
 Summary:	Development files for openvas-libraries
@@ -46,40 +37,43 @@ This package contains the development files (mainly C header files) for openvas-
 
 %prep
 %setup -qn openvas-libraries-%{version}
-%patch0 -p1 -b .strfmt
 %patch1 -p1 -b .libs
+%patch2 -p0 -b .link
 
 %build
+export CFLAGS="%{optflags} -fPIC"
+export CXXPPFLAGS="%{optflags} -fPIC"
 autoconf
-%configure2_5x --disable-static
+%configure2_5x --enable-static
 %make all
 
 %install
 rm -fr %buildroot
 %makeinstall_std
 find %{buildroot} -name *.la -exec %__rm {} \;
+find %{buildroot} -name *.a -exec %__rm {} \;
 
 %multiarch_binaries %{buildroot}%{_bindir}/libopenvas-config
 
 %clean
 rm -fr %buildroot
 
+%files
+%defattr(-,root,root)
+%{_bindir}/openvas-nasl
+%{_mandir}/man1/openvas-nasl.1.*
+%{_datadir}/openvas
+
 %files -n %{libname}
 %defattr(-,root,root)
 %doc ChangeLog CHANGES TODO
-%{_libdir}/libopenvas.so.%{major}
-%{_libdir}/libopenvas.so.%{major}.*
-
-%files -n %{libhg}
-%defattr(-,root,root)
-%{_libdir}/libopenvas_hg.so.%{major}
-%{_libdir}/libopenvas_hg.so.%{major}.*
+%{_libdir}/*.so.%{major}
+%{_libdir}/*.so.%{major}.*
 
 %files -n %{develname}
 %defattr(-,root,root)
 %{_bindir}/libopenvas-config
 %multiarch %{multiarch_bindir}/libopenvas-config
 %{_includedir}/openvas
-%{_libdir}/libopenvas.so
-%{_libdir}/libopenvas_hg.so
+%{_libdir}/*.so
 %{_mandir}/man1/libopenvas-config.1*

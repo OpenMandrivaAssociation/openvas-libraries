@@ -4,7 +4,7 @@
 
 Name:           openvas-libraries
 Version:        3.0.0
-Release:        %mkrel 1
+Release:        %mkrel 2
 License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
@@ -31,6 +31,7 @@ Group:		Development/C
 Requires:	%{libname} = %{version}
 Provides:	%{name}-devel = %{version}-%{release}
 Provides:	openvas-devel = %{version}-%{release}
+Obsoletes:	%{_lib}openvas-libnasl-devel < 3.0.0
 Summary:	Development files for openvas-libraries
 
 %description -n %{develname}

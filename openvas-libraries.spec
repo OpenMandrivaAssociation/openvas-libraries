@@ -4,7 +4,7 @@
 
 Name:           openvas-libraries
 Version:        3.0.0
-Release:        %mkrel 2
+Release:        %mkrel 3
 License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
@@ -14,6 +14,7 @@ Patch2:		openvas-libraries-3.0.0-linkage.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  libpcap-devel glib2-devel gnutls-devel gpgme-devel
 BuildRequires:	cmake bison
+Obsoletes:	openvas-libnasl < 3.0.0
 Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Server
 
 %description

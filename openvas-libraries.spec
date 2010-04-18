@@ -3,14 +3,14 @@
 %define develname %mklibname -d openvas
 
 Name:           openvas-libraries
-Version:        3.0.0
-Release:        %mkrel 3
+Version:        3.0.5
+Release:        %mkrel 1
 License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
 Source:         http://wald.intevation.org/frs/download.php/572/%{name}-%{version}.tar.gz
 Patch1:		openvas-libraries-3.0.0-libs.patch
-Patch2:		openvas-libraries-3.0.0-linkage.patch
+Patch2:		openvas-libraries-3.0.5-linkage.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  libpcap-devel glib2-devel gnutls-devel gpgme-devel
 BuildRequires:	cmake bison

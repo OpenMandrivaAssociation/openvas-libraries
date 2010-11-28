@@ -9,8 +9,6 @@ License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
 Source:         http://wald.intevation.org/frs/download.php/572/%{name}-%{version}.tar.gz
-Patch1:		openvas-libraries-3.0.0-libs.patch
-Patch2:		openvas-libraries-3.0.5-linkage.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  libpcap-devel glib2-devel gnutls-devel gpgme-devel
 BuildRequires:	cmake bison
@@ -40,13 +38,10 @@ This package contains the development files (mainly C header files) for openvas-
 
 %prep
 %setup -qn openvas-libraries-%{version}
-#%patch1 -p1 -b .libs
-#%patch2 -p0 -b .link
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXPPFLAGS="%{optflags} -fPIC"
-#autoconf
 %configure2_5x --disable-static
 %make
 

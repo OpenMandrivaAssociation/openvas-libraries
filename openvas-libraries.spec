@@ -10,7 +10,7 @@ Group:          System/Libraries
 URL:            http://www.openvas.org
 Source:         http://wald.intevation.org/frs/download.php/572/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-BuildRequires:  libpcap-devel glib2-devel gnutls-devel gpgme-devel
+BuildRequires:  libpcap-devel glib2-devel gnutls-devel gpgme-devel libuuid-devel
 BuildRequires:	cmake bison
 Obsoletes:	openvas-libnasl < 3.0.0
 Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Server

@@ -3,7 +3,7 @@
 %define develname %mklibname -d openvas
 
 Name:           openvas-libraries
-Version:        3.0.5
+Version:        3.1.4
 Release:        %mkrel 1
 License:        LGPLv2+
 Group:          System/Libraries
@@ -40,15 +40,15 @@ This package contains the development files (mainly C header files) for openvas-
 
 %prep
 %setup -qn openvas-libraries-%{version}
-%patch1 -p1 -b .libs
-%patch2 -p0 -b .link
+#%patch1 -p1 -b .libs
+#%patch2 -p0 -b .link
 
 %build
 export CFLAGS="%{optflags} -fPIC"
 export CXXPPFLAGS="%{optflags} -fPIC"
-autoconf
-%configure2_5x --enable-static
-%make all
+#autoconf
+%configure2_5x --disable-static
+%make
 
 %install
 rm -fr %buildroot

@@ -41,6 +41,8 @@ This package contains the development files (mainly C header files) for openvas-
 %setup -qn openvas-libraries-%{version}
 %patch0 -p0
 
+sed -i -e 's#-Wall##' `grep -rl Wall *|grep CMakeLists.txt`
+
 %build
 %cmake
 %make

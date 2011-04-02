@@ -1,14 +1,15 @@
-%define major 3
+%define major 4
 %define libname %mklibname openvas %{major}
 %define develname %mklibname -d openvas
 
 Name:           openvas-libraries
-Version:        3.1.4
+Version:        4.0.3
 Release:        %mkrel 1
 License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
 Source:         http://wald.intevation.org/frs/download.php/572/%{name}-%{version}.tar.gz
+Patch0:		openvas-libraries-4.0.3-build.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  libpcap-devel glib2-devel gnutls-devel gpgme-devel libuuid-devel
 BuildRequires:	cmake bison
@@ -38,20 +39,17 @@ This package contains the development files (mainly C header files) for openvas-
 
 %prep
 %setup -qn openvas-libraries-%{version}
+%patch0 -p0
 
 %build
-export CFLAGS="%{optflags} -fPIC"
-export CXXPPFLAGS="%{optflags} -fPIC"
-%configure2_5x --disable-static
+%cmake
 %make
 
 %install
 rm -fr %buildroot
-%makeinstall_std
+%makeinstall_std -C build
 find %{buildroot} -name *.la -exec %__rm {} \;
 find %{buildroot} -name *.a -exec %__rm {} \;
-
-%multiarch_binaries %{buildroot}%{_bindir}/libopenvas-config
 
 %clean
 rm -fr %buildroot
@@ -64,14 +62,12 @@ rm -fr %buildroot
 
 %files -n %{libname}
 %defattr(-,root,root)
-%doc ChangeLog CHANGES TODO
+%doc ChangeLog CHANGES
 %{_libdir}/*.so.%{major}
 %{_libdir}/*.so.%{major}.*
 
 %files -n %{develname}
 %defattr(-,root,root)
-%{_bindir}/libopenvas-config
-%multiarch %{multiarch_bindir}/libopenvas-config
 %{_includedir}/openvas
+%{_libdir}/pkgconfig/*.pc
 %{_libdir}/*.so
-%{_mandir}/man1/libopenvas-config.1*

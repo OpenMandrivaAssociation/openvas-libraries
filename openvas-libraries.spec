@@ -3,7 +3,7 @@
 %define develname %mklibname -d openvas
 
 Name:           openvas-libraries
-Version:        4.0.4
+Version:        4.0.5
 Release:        %mkrel 1
 Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Server
 License:        LGPLv2+

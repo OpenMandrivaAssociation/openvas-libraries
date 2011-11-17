@@ -3,13 +3,13 @@
 %define develname %mklibname -d openvas
 
 Name:           openvas-libraries
-Version:        4.0.5
+Version:        4.0.6
 Release:        %mkrel 1
 Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Server
 License:        LGPLv2+
 Group:          System/Libraries
 URL:            http://www.openvas.org
-Source:         http://wald.intevation.org/frs/download.php/572/%{name}-%{version}.tar.gz
+Source:         http://wald.intevation.org/frs/download.php/979/openvas-libraries-%{version}.tar.gz
 Patch0:		openvas-libraries-4.0.4-build.patch
 BuildRequires:  libpcap-devel
 BuildRequires:  glib2-devel
@@ -19,7 +19,7 @@ BuildRequires:  libuuid-devel
 BuildRequires:	cmake
 BuildRequires:	bison
 Obsoletes:	openvas-libnasl < 3.0.0
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 openvas-libraries is the base library for the OpenVAS network security scanner.
@@ -32,29 +32,33 @@ Summary:        Support libraries for Open Vulnerability Assessment (OpenVAS) Se
 The support libraries for Open Vulnerability Assessment (OpenVAS) Server.
 
 %package -n %{develname}
+Summary:	Development files for openvas-libraries
 Group:		Development/C
 Requires:	%{libname} = %{version}
 Provides:	%{name}-devel = %{version}-%{release}
 Provides:	openvas-devel = %{version}-%{release}
 Obsoletes:	%{_lib}openvas-libnasl-devel < 3.0.0
-Summary:	Development files for openvas-libraries
 
 %description -n %{develname}
 This package contains the development files (mainly C header files) for openvas-libraries.
 
 %prep
+
 %setup -qn openvas-libraries-%{version}
 %patch0 -p 1
+
 
 sed -i -e 's#-Werror##' `grep -rl Werror *|grep CMakeLists.txt`
 
 %build
-%cmake
+%cmake -DLOCALSTATEDIR:PATH=%{_var}
 %make
 
 %install
 rm -fr %buildroot
+
 %makeinstall_std -C build
+
 find %{buildroot} -name *.la -exec %__rm {} \;
 find %{buildroot} -name *.a -exec %__rm {} \;
 

@@ -1,0 +1,87 @@
+diff -Naur -x '*~' -x '*.orig' openvas-libraries-4.0.4/CMakeLists.txt openvas-libraries-4.0.4-build//CMakeLists.txt
+--- openvas-libraries-4.0.4/CMakeLists.txt	2011-05-22 19:07:29.000000000 +0200
++++ openvas-libraries-4.0.4-build//CMakeLists.txt	2011-05-22 19:07:46.000000000 +0200
+@@ -257,7 +257,7 @@
+ install (FILES doc/openvas-nasl.1
+          DESTINATION ${DATADIR}/man/man1 )
+ 
+-install (FILES libopenvas.pc
++install (FILES ${CMAKE_CURRENT_BINARY_DIR}/libopenvas.pc
+          DESTINATION ${LIBDIR}/pkgconfig)
+ 
+ install (FILES openvas-services DESTINATION ${OPENVAS_DATA_DIR}
+diff -Naur -x '*~' -x '*.orig' openvas-libraries-4.0.4/hg/CMakeLists.txt openvas-libraries-4.0.4-build//hg/CMakeLists.txt
+--- openvas-libraries-4.0.4/hg/CMakeLists.txt	2011-05-22 19:07:29.000000000 +0200
++++ openvas-libraries-4.0.4-build//hg/CMakeLists.txt	2011-05-22 19:08:50.000000000 +0200
+@@ -52,6 +52,7 @@
+ set_target_properties (openvas_hg_shared PROPERTIES VERSION "${CPACK_PACKAGE_VERSION}")
+ set_target_properties (openvas_hg_shared PROPERTIES PUBLIC_HEADER "${HEADERS}")
+ target_link_libraries (openvas_hg_shared resolv openvas_misc_shared openvas_base_shared)
++add_dependencies(openvas_hg_shared openvas_misc_shared)
+ 
+ if (OPENVAS_PID_DIR)
+   add_definitions (-DOPENVAS_PID_DIR=\\\"${OPENVAS_PID_DIR}\\\")
+diff -Naur -x '*~' -x '*.orig' openvas-libraries-4.0.4/hg/CMakeLists.txt.rej openvas-libraries-4.0.4-build//hg/CMakeLists.txt.rej
+--- openvas-libraries-4.0.4/hg/CMakeLists.txt.rej	1970-01-01 01:00:00.000000000 +0100
++++ openvas-libraries-4.0.4-build//hg/CMakeLists.txt.rej	2011-05-22 19:07:46.000000000 +0200
+@@ -0,0 +1,10 @@
++--- hg/CMakeLists.txt.build	2011-04-02 10:55:30.000000000 +0200
+++++ hg/CMakeLists.txt	2011-04-02 10:55:30.000000000 +0200
++@@ -52,6 +52,7 @@
++ set_target_properties (openvas_hg_shared PROPERTIES VERSION "${CPACK_PACKAGE_VERSION}")
++ set_target_properties (openvas_hg_shared PROPERTIES PUBLIC_HEADER "${HEADERS}")
++ target_link_libraries (openvas_hg_shared resolv openvas_misc)
+++add_dependencies(openvas_hg_shared openvas_misc_shared)
++ 
++ if (OPENVAS_PID_DIR)
++   add_definitions (-DOPENVAS_PID_DIR=\\\"${OPENVAS_PID_DIR}\\\")
+diff -Naur -x '*~' -x '*.orig' openvas-libraries-4.0.4/nasl/CMakeLists.txt openvas-libraries-4.0.4-build//nasl/CMakeLists.txt
+--- openvas-libraries-4.0.4/nasl/CMakeLists.txt	2011-05-22 19:07:29.000000000 +0200
++++ openvas-libraries-4.0.4-build//nasl/CMakeLists.txt	2011-05-22 19:09:29.000000000 +0200
+@@ -51,8 +51,9 @@
+ ## that and that the user is not warned if bison is not installed
+ add_custom_command (
+    COMMAND bison
+-   ARGS -d -v -t -p nasl nasl_grammar.y
+-   DEPENDS nasl_grammar.y
++   ARGS -d -v -t -p nasl ${CMAKE_CURRENT_SOURCE_DIR}/nasl_grammar.y
++   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/nasl_grammar.y
++   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/nasl_grammar.tab.c
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/nasl_grammar.tab.h
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/nasl_grammar.output)
+@@ -100,7 +101,7 @@
+ set_target_properties (openvas_nasl_static PROPERTIES PUBLIC_HEADER "${HEADERS}")
+ target_link_libraries (openvas_nasl_static openvas_base_static openvas_misc_static
+ 			openvas_hg_static glib-2.0 gcrypt gpgme
+-			gpg-error gnutls pcap ${WMI})
++			gpg-error gnutls pcap m resolv ${WMI})
+ 
+ add_library (openvas_nasl_shared SHARED ${FILES})
+ set_target_properties (openvas_nasl_shared PROPERTIES COMPILE_FLAGS "${GLIB_CFLAGS} ${WMI_LIBS} ${GPGME_CFLAGS}")
+diff -Naur -x '*~' -x '*.orig' openvas-libraries-4.0.4/nasl/CMakeLists.txt.rej openvas-libraries-4.0.4-build//nasl/CMakeLists.txt.rej
+--- openvas-libraries-4.0.4/nasl/CMakeLists.txt.rej	1970-01-01 01:00:00.000000000 +0100
++++ openvas-libraries-4.0.4-build//nasl/CMakeLists.txt.rej	2011-05-22 19:07:46.000000000 +0200
+@@ -0,0 +1,11 @@
++--- nasl/CMakeLists.txt.build	2011-04-02 10:55:30.000000000 +0200
+++++ nasl/CMakeLists.txt	2011-04-02 10:56:36.000000000 +0200
++@@ -113,7 +114,7 @@
++ # line bellow is needed so it also works with no-undefined which is e.g. used by Mandriva
++ target_link_libraries (openvas_nasl_shared openvas_base openvas_misc
++ 			openvas_hg glib-2.0 gcrypt gpgme
++-			gpg-error gnutls pcap m ${WMI})
+++			gpg-error gnutls pcap m resolv ${WMI})
++ 
++ # Link the openvas-nasl executable
++ add_executable (openvas-nasl nasl.c)
+diff -Naur -x '*~' -x '*.orig' openvas-libraries-4.0.4/omp/CMakeLists.txt openvas-libraries-4.0.4-build//omp/CMakeLists.txt
+--- openvas-libraries-4.0.4/omp/CMakeLists.txt	2011-05-22 19:07:29.000000000 +0200
++++ openvas-libraries-4.0.4-build//omp/CMakeLists.txt	2011-05-22 19:07:46.000000000 +0200
+@@ -49,6 +49,7 @@
+ set_target_properties (openvas_omp_shared PROPERTIES SOVERSION "${CPACK_PACKAGE_VERSION_MAJOR}")
+ set_target_properties (openvas_omp_shared PROPERTIES VERSION "${CPACK_PACKAGE_VERSION}")
+ set_target_properties (openvas_omp_shared PROPERTIES PUBLIC_HEADER "${HEADERS}")
++add_dependencies(openvas_omp_shared openvas_misc_shared)
+ 
+ if (MINGW)
+   target_link_libraries (openvas_omp_shared openvas_misc_shared -lglib-2.0 -lgnutls

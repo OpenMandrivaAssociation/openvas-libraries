@@ -9,7 +9,7 @@
 Summary:	Support libraries for Open Vulnerability Assessment (OpenVAS) Server
 Name:		openvas-libraries
 Version:	4.0.7
-Release:	2
+Release:	3
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.openvas.org

@@ -1,4 +1,4 @@
-%define major 4
+%define major 8
 %define libbase %mklibname openvas_base %{major}
 %define libhg %mklibname openvas_hg %{major}
 %define libmisc %mklibname openvas_misc %{major}
@@ -8,21 +8,25 @@
 
 Summary:	Support libraries for Open Vulnerability Assessment (OpenVAS) Server
 Name:		openvas-libraries
-Version:	4.0.7
-Release:	3
+Version:	8.0.4
+Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.openvas.org
-Source0:	http://wald.intevation.org/frs/download.php/979/openvas-libraries-%{version}.tar.gz
-Patch0:		openvas-libraries-4.0.4-build.patch
+Source0:	http://wald.intevation.org/frs/download.php/2125/%{name}-%{version}.tar.gz
 BuildRequires:	bison
 BuildRequires:	cmake
 BuildRequires:	gpgme-devel
-BuildRequires:	libpcap-devel
-BuildRequires:	pkgconfig(glib-2.0)
-BuildRequires:	pkgconfig(gnutls)
+BuildRequires:  libksba-devel
+BuildRequires:  pcap-devel
 BuildRequires:	pkgconfig(libgcrypt)
-BuildRequires:	pkgconfig(uuid)
+BuildRequires:  pkgconfig(gnutls)
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(hiredis)
+BuildRequires:  pkgconfig(libssh)
+BuildRequires:  pkgconfig(uuid)
+BuildRequires:  hiredis-devel
+
 Obsoletes:	openvas-libnasl < 3.0.0
 
 %description
@@ -127,12 +131,12 @@ openvas-libraries.
 
 %prep
 %setup -q
-%patch0 -p1
+%apply_patches
 
 sed -i -e 's#-Werror##' `grep -rl Werror *|grep CMakeLists.txt`
 
 %build
-%cmake -DLOCALSTATEDIR:PATH=%{_var}
+%cmake -DLOCALSTATEDIR:PATH=%{_var} -DBUILD_WITH_LDAP=ON
 %make
 
 %install

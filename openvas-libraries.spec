@@ -131,7 +131,7 @@ openvas-libraries.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 sed -i -e 's#-Werror##' `grep -rl Werror *|grep CMakeLists.txt`
 

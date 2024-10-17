@@ -12,7 +12,7 @@ Version:	8.0.4
 Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
-Url:		http://www.openvas.org
+Url:		https://www.openvas.org
 Source0:	http://wald.intevation.org/frs/download.php/2125/%{name}-%{version}.tar.gz
 BuildRequires:	bison
 BuildRequires:	cmake
